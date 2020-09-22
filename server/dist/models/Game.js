@@ -177,6 +177,7 @@ class Game {
         };
         this.players = socketIDs.map((id) => new _1.Player(id));
         this.gameID = gameID;
+        this.state = enums_1.GameState.MissionStart;
     }
 }
 exports.Game = Game;

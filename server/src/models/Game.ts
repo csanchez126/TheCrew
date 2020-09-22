@@ -12,6 +12,7 @@ export class Game {
   constructor(gameID: string, socketIDs: string[]) {
     this.players = socketIDs.map((id) => new Player(id));
     this.gameID = gameID;
+    this.state = GameState.MissionStart;
   }
 
   public generateDeck = () => {

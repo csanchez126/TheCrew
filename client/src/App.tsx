@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import socketIOClient from "socket.io-client";
 import "./App.scss";
 import { CardComponent } from "./components/Card";
-import { CardType, Suit } from "./enums";
+import { CardType, GameState, Suit } from "./enums";
 import { Turn, Player, Card, Trick, Game, Task } from "./models";
 const ENDPOINT = "localhost:4001";
 
@@ -13,9 +13,7 @@ export default function App() {
   const [message, setMessage] = useState("");
   const [player, setPlayer] = useState<Player>();
   const [game, setGame] = useState<Game>({} as Game);
-  const [width, setWidth] = React.useState(
-    (document.getElementById("hand-container") as HTMLDivElement)?.offsetWidth
-  );
+  const [handContainerWidth, setHandContainerWidth] = React.useState(0);
 
   useEffect(() => {
     socket = socketIOClient(ENDPOINT);
@@ -40,22 +38,16 @@ export default function App() {
       setPlayer(game.players.find((p) => p.name === socket.id));
     });
 
+    updateHandSpread();
     return () => {
       socket.disconnect();
     };
   }, []);
 
   useLayoutEffect(() => {
-    const handDivWidth = (document.getElementById(
-      "hand-container"
-    ) as HTMLDivElement)?.offsetWidth;
-
-    const handleWindowResize = () => {
-      setWidth(handDivWidth);
-    };
-    window.addEventListener("resize", handleWindowResize);
+    window.addEventListener("resize", updateHandSpread);
     return () => {
-      window.removeEventListener("resize", handleWindowResize);
+      window.removeEventListener("resize", updateHandSpread);
     };
   }, [window.innerWidth]);
 
@@ -64,6 +56,21 @@ export default function App() {
       const turn = new Turn(player.name, card);
       console.log(turn);
       socket.emit("play turn", turn);
+    }
+  };
+
+  const updateHandSpread = () => {
+    const handDivWidth = (document.getElementById(
+      "hand-container"
+    ) as HTMLDivElement)?.offsetWidth;
+    setHandContainerWidth(handDivWidth);
+  };
+
+  const selectTask = (card: Card) => {
+    if (player != null) {
+      const turn = new Turn(player.name, card);
+      console.log(turn);
+      socket.emit("select task", turn);
     }
   };
 
@@ -109,7 +116,10 @@ export default function App() {
                 card={card}
                 onClick={playTurn}
                 offset={
-                  i > 0 ? (width - 138) / (player?.hand.length - 1) - 138 : 0
+                  i > 0
+                    ? (handContainerWidth - 138) / (player?.hand.length - 1) -
+                      138
+                    : 0
                 }
               />
             ))}
