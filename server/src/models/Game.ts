@@ -6,7 +6,7 @@ export class Game {
   tasks: Task[] = [];
   trick: Trick;
   currentTrickWinner: Player;
-  taskCount: number = 2;
+  taskCount: number = 6;
   state: GameState;
 
   constructor(gameID: string, socketIDs: string[]) {
@@ -49,14 +49,15 @@ export class Game {
     // Task distribution
     const taskDeck: Task[] = this.generateTaskDeck();
     this.tasks = taskDeck.splice(0, this.taskCount);
-    // For temporary task distribution
-    const firstPlayerIndex = this.players.findIndex((p) => p.isFirstPlayer);
-    // Distribute tasks
-    this.tasks.forEach((task, i) => {
-      this.players[(i + firstPlayerIndex) % this.players.length].tasks.push(
-        task
-      );
-    });
+
+    // // For temporary task distribution
+    // const firstPlayerIndex = this.players.findIndex((p) => p.isFirstPlayer);
+    // // Distribute tasks
+    // this.tasks.forEach((task, i) => {
+    //   this.players[(i + firstPlayerIndex) % this.players.length].tasks.push(
+    //     task
+    //   );
+    // });
 
     console.log(this.tasks);
   };

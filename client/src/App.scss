@@ -1,7 +1,7 @@
 .app-container {
-  position: relative;
   width: 100%;
-  overflow: hidden;
+  // overflow: hidden;
+  box-sizing: border-box;
   margin: auto;
   height: 100vh;
   display: flex;
@@ -9,14 +9,34 @@
   justify-content: space-between;
   background: url("./img/background.jpg");
   background-repeat: no-repeat;
+  p {
+    margin: 0;
+  }
   .controls {
-    position: relative;
     display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-items: center;
     margin-bottom: 20px;
     color: white;
+    .info {
+      display: flex;
+      flex-direction: column;
+      width: 400px;
+      p {
+        margin-bottom: 3px;
+      }
+      .label {
+        font-weight: bold;
+      }
+    }
+  }
+  .playing-field {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    .task-selection {
+      border: 1px solid green;
+      flex: 1;
+      min-height: 0;
+    }
   }
 
   .trick-container {
@@ -119,6 +139,7 @@
     }
   }
 
+  //Suit colors
   .rocket {
     background-color: #010101;
   }

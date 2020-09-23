@@ -6,7 +6,7 @@ const _1 = require("./");
 class Game {
     constructor(gameID, socketIDs) {
         this.tasks = [];
-        this.taskCount = 2;
+        this.taskCount = 6;
         this.generateDeck = () => {
             const gameDeck = [];
             const suitInts = Object.values(enums_1.Suit).filter((val) => !isNaN(val));

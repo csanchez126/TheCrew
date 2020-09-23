@@ -2,12 +2,14 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import socketIOClient from "socket.io-client";
 import "./App.scss";
 import { CardComponent } from "./components/Card";
+import { TaskSelection } from "./components/TaskSelection";
 import { CardType, GameState, Suit } from "./enums";
 import { Turn, Player, Card, Trick, Game, Task } from "./models";
 const ENDPOINT = "localhost:4001";
 
 let socket: SocketIOClient.Socket;
-const GameContext = React.createContext<Game>({} as Game);
+export const GameContext = React.createContext<Game>({} as Game);
+export const PlayerContext = React.createContext<Player>({} as Player);
 
 export default function App() {
   const [message, setMessage] = useState("");
@@ -78,29 +80,27 @@ export default function App() {
     <GameContext.Provider value={game}>
       <div className="app-container">
         <div className="controls">
-          <p>{player?.name}</p>
-          <p>{message}</p>
+          <div className="info">
+            <p>
+              <span className="label">Player/Socket ID:</span> {player?.name}
+            </p>
+            <p>
+              <span className="label">Game Message: </span> {message}
+            </p>
+            <p>
+              <span className="label">Game State: </span>
+              {GameState[game.state]}
+            </p>
+          </div>
           {player?.isCommander && <p>You are the commander</p>}
         </div>
-        <div className="trick-container">
-          {game.trick?.cards.map((card: Card) => (
-            <CardComponent
-              disabled={false}
-              cardType={CardType.Trick}
-              card={card}
-            />
-          ))}
+        <div className="playing-field">
+          {game.state === GameState.MissionStart && <TaskSelection />}
+          {/* {game.state === GameState.TrickSetup && <TrickSetp />}
+          {game.state === GameState.TrickOngoing && <TrickSetp />}
+          {game.state === GameState.MissionFailed && <TrickSetp />} */}
         </div>
-        <div className="trick-container">
-          <p>My Tasks</p>
-          {player?.tasks.map((card: Task) => (
-            <CardComponent
-              disabled={false}
-              cardType={CardType.Task}
-              card={card}
-            />
-          ))}
-        </div>
+
         <div className={"player-area"}>
           <div className="tasks"></div>
           <div id="hand-container">
