@@ -46,6 +46,11 @@ io.on("connection", (socket) => {
     updatePlayers();
   });
 
+  socket.on("select task", (turn: Turn) => {
+    game.selectTask(turn);
+    updatePlayers();
+  });
+
   socket.on("disconnect", () => {
     users = users.filter((p) => p.id !== socket.id);
     if (game != null && users.length < game.players.length) {

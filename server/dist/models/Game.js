@@ -38,12 +38,14 @@ class Game {
             // Task distribution
             const taskDeck = this.generateTaskDeck();
             this.tasks = taskDeck.splice(0, this.taskCount);
-            // For temporary task distribution
-            const firstPlayerIndex = this.players.findIndex((p) => p.isFirstPlayer);
-            // Distribute tasks
-            this.tasks.forEach((task, i) => {
-                this.players[(i + firstPlayerIndex) % this.players.length].tasks.push(task);
-            });
+            // // For temporary task distribution
+            // const firstPlayerIndex = this.players.findIndex((p) => p.isFirstPlayer);
+            // // Distribute tasks
+            // this.tasks.forEach((task, i) => {
+            //   this.players[(i + firstPlayerIndex) % this.players.length].tasks.push(
+            //     task
+            //   );
+            // });
             console.log(this.tasks);
         };
         this.setupMission = () => {
@@ -86,6 +88,20 @@ class Game {
         };
         this.isLastPlayer = (player) => {
             return this.getNextPlayer(player.name).isFirstPlayer;
+        };
+        this.selectTask = (turn) => {
+            const { playerID, card } = turn;
+            const currentPlayer = this.getPlayer(playerID);
+            const nextPlayer = this.getNextPlayer(playerID);
+            if (this.taskChoiceIsValid(turn)) {
+                currentPlayer.tasks.push(card);
+                this.tasks = this.tasks.filter((task) => task.suit !== card.suit && task.value !== card.value);
+                currentPlayer.isTurn = false;
+                nextPlayer.isTurn = true;
+                if (this.tasks.length === 0) {
+                    this.state = enums_1.GameState.TrickSetup;
+                }
+            }
         };
         this.playTurn = (turn) => {
             const { playerID, card } = turn;
@@ -170,10 +186,19 @@ class Game {
             const isTurn = player.isTurn;
             const hasCard = player.hand.some((c) => c.suit === card.suit && c.suit === card.suit);
             const hasRequiredSuit = trickStarted && player.hand.some((c) => this.trick.suit === c.suit);
-            const isValid = card.suit === enums_1.Suit.Rocket ||
-                (this.trick != null && card.suit === this.trick.suit) ||
-                !hasRequiredSuit;
+            const isValid = this.state === enums_1.GameState.TrickOngoing &&
+                (card.suit === enums_1.Suit.Rocket ||
+                    (this.trick != null && card.suit === this.trick.suit) ||
+                    !hasRequiredSuit);
             return isTurn && hasCard && (!trickStarted || isValid);
+        };
+        this.taskChoiceIsValid = (turn) => {
+            const { playerID, card } = turn;
+            const player = this.getPlayer(playerID);
+            console.log(player.name, "chose: ", card);
+            const isTurn = player.isTurn;
+            const gameHasRequiredSuit = this.tasks.some((task) => task.suit === card.suit && task.value === card.value);
+            return gameHasRequiredSuit;
         };
         this.players = socketIDs.map((id) => new _1.Player(id));
         this.gameID = gameID;

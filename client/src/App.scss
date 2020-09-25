@@ -1,3 +1,5 @@
+// Fonts to use :https://www.fontzillion.com/fonts/pixel-sagas/joystick?utm_source=fontsquirrel.com&utm_medium=matcherator_link&utm_campaign=joystick
+
 .app-container {
   width: 100%;
   // overflow: hidden;
@@ -34,20 +36,18 @@
     flex: 1;
     .task-selection {
       border: 1px solid green;
+      display: flex;
+      flex-direction: column;
       flex: 1;
+      align-items: center;
       min-height: 0;
+      .task-container {
+        border: 1px solid pink;
+        display: flex;
+      }
     }
-  }
-
-  .trick-container {
-    position: relative;
-    width: 100%;
-    height: 120px;
-    display: flex;
-    justify-content: center;
     .trick,
     .task {
-      position: relative;
       box-sizing: border-box;
       height: 100px;
       width: 64px;
@@ -63,6 +63,14 @@
         margin: 0;
       }
     }
+  }
+
+  .trick-container {
+    position: relative;
+    width: 100%;
+    height: 120px;
+    display: flex;
+    justify-content: center;
   }
   .player-area {
     height: 300px;

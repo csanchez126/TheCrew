@@ -106,6 +106,23 @@ export class Game {
     return this.getNextPlayer(player.name).isFirstPlayer;
   };
 
+  public selectTask = (turn: Turn) => {
+    const { playerID, card } = turn;
+    const currentPlayer = this.getPlayer(playerID);
+    const nextPlayer = this.getNextPlayer(playerID);
+    if (this.taskChoiceIsValid(turn)) {
+      currentPlayer.tasks.push(card as Task);
+      this.tasks = this.tasks.filter(
+        (task) => task.suit !== card.suit && task.value !== card.value
+      );
+      currentPlayer.isTurn = false;
+      nextPlayer.isTurn = true;
+      if (this.tasks.length === 0) {
+        this.state = GameState.TrickSetup;
+      }
+    }
+  };
+
   public playTurn = (turn: Turn) => {
     const { playerID, card } = turn;
     const currentPlayer = this.getPlayer(playerID);
@@ -211,10 +228,25 @@ export class Game {
       trickStarted && player.hand.some((c) => this.trick.suit === c.suit);
 
     const isValid =
-      card.suit === Suit.Rocket ||
-      (this.trick != null && card.suit === this.trick.suit) ||
-      !hasRequiredSuit;
+      this.state === GameState.TrickOngoing &&
+      (card.suit === Suit.Rocket ||
+        (this.trick != null && card.suit === this.trick.suit) ||
+        !hasRequiredSuit);
 
     return isTurn && hasCard && (!trickStarted || isValid);
+  };
+
+  public taskChoiceIsValid = (turn: Turn): boolean => {
+    const { playerID, card } = turn;
+    const player = this.getPlayer(playerID);
+
+    console.log(player.name, "chose: ", card);
+    const isTurn = player.isTurn;
+
+    const gameHasRequiredSuit = this.tasks.some(
+      (task) => task.suit === card.suit && task.value === card.value
+    );
+
+    return gameHasRequiredSuit;
   };
 }

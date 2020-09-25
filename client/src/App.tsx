@@ -76,6 +76,20 @@ export default function App() {
     }
   };
 
+  const getPlayingAreaComponent = (): any => {
+    console.log(player);
+    switch (game.state) {
+      case GameState.MissionStart:
+        return <TaskSelection player={player} />;
+      case GameState.TaskSelection:
+      case GameState.TrickSetup:
+      case GameState.TrickOngoing:
+      case GameState.TrickEnd:
+      case GameState.MissionFailed:
+        return null;
+    }
+  };
+
   return (
     <GameContext.Provider value={game}>
       <div className="app-container">
@@ -95,10 +109,7 @@ export default function App() {
           {player?.isCommander && <p>You are the commander</p>}
         </div>
         <div className="playing-field">
-          {game.state === GameState.MissionStart && <TaskSelection />}
-          {/* {game.state === GameState.TrickSetup && <TrickSetp />}
-          {game.state === GameState.TrickOngoing && <TrickSetp />}
-          {game.state === GameState.MissionFailed && <TrickSetp />} */}
+          {player != null && getPlayingAreaComponent()}
         </div>
 
         <div className={"player-area"}>
