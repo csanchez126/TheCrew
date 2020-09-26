@@ -20,6 +20,8 @@ let users: socketIO.Socket[] = [];
 let game: Game;
 
 const gameID = "Salut";
+const names = ["carlos", "jean-simon", "jo", "pier-luc"];
+const nameIndex = 0;
 
 io.on("connection", (socket) => {
   console.log("User connected", socket.id);
@@ -33,12 +35,10 @@ io.on("connection", (socket) => {
     // Start game
     game = new Game(
       gameID,
-      users.map((u) => u.id)
+      users.map((u, i) => new Player(u.id, names[i]))
     );
     game.setupGame();
-    users.forEach((user) => {
-      user.emit("game created", game);
-    });
+    updatePlayers();
   }
 
   socket.on("play turn", (turn: Turn) => {

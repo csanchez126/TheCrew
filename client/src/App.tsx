@@ -2,14 +2,17 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import socketIOClient from "socket.io-client";
 import "./App.scss";
 import { CardComponent } from "./components/Card";
+import { PlayerTasks } from "./components/PlayerTasks";
 import { TaskSelection } from "./components/TaskSelection";
 import { CardType, GameState, Suit } from "./enums";
 import { Turn, Player, Card, Trick, Game, Task } from "./models";
 const ENDPOINT = "localhost:4001";
 
 let socket: SocketIOClient.Socket;
-export const GameContext = React.createContext<Game>({} as Game);
-export const PlayerContext = React.createContext<Player>({} as Player);
+export const GameContext = React.createContext<{
+  game: Game;
+  socket: SocketIOClient.Socket;
+}>({ game: {} as Game, socket: {} as SocketIOClient.Socket });
 
 export default function App() {
   const [message, setMessage] = useState("");
@@ -31,13 +34,13 @@ export default function App() {
       console.log(game);
       setMessage("updateGameState");
       setGame(game);
-      setPlayer(game.players.find((p) => p.name === socket.id));
+      setPlayer(game.players.find((p) => p.socketID === socket.id));
     });
 
     socket.on("updateGameState", (game: Game) => {
       setMessage("updateGameState");
       setGame(game);
-      setPlayer(game.players.find((p) => p.name === socket.id));
+      setPlayer(game.players.find((p) => p.socketID === socket.id));
     });
 
     updateHandSpread();
@@ -54,8 +57,8 @@ export default function App() {
   }, [window.innerWidth]);
 
   const playTurn = (card: Card) => {
-    if (player != null) {
-      const turn = new Turn(player.name, card);
+    if (player != null && game.state === GameState.TrickOngoing) {
+      const turn = new Turn(player.socketID, card);
       console.log(turn);
       socket.emit("play turn", turn);
     }
@@ -68,20 +71,13 @@ export default function App() {
     setHandContainerWidth(handDivWidth);
   };
 
-  const selectTask = (card: Card) => {
-    if (player != null) {
-      const turn = new Turn(player.name, card);
-      console.log(turn);
-      socket.emit("select task", turn);
-    }
-  };
-
   const getPlayingAreaComponent = (): any => {
     console.log(player);
     switch (game.state) {
       case GameState.MissionStart:
-        return <TaskSelection player={player} />;
+        return;
       case GameState.TaskSelection:
+        return <TaskSelection player={player} />;
       case GameState.TrickSetup:
       case GameState.TrickOngoing:
       case GameState.TrickEnd:
@@ -91,7 +87,7 @@ export default function App() {
   };
 
   return (
-    <GameContext.Provider value={game}>
+    <GameContext.Provider value={{ game, socket }}>
       <div className="app-container">
         <div className="controls">
           <div className="info">
@@ -113,7 +109,9 @@ export default function App() {
         </div>
 
         <div className={"player-area"}>
-          <div className="tasks"></div>
+          <div className="player-tasks">
+            <PlayerTasks player={player} />
+          </div>
           <div id="hand-container">
             {player?.hand.map((card: Card, i: number, cards: Card[]) => (
               <CardComponent

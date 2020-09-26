@@ -9,8 +9,8 @@ export class Game {
   taskCount: number = 6;
   state: GameState;
 
-  constructor(gameID: string, socketIDs: string[]) {
-    this.players = socketIDs.map((id) => new Player(id));
+  constructor(gameID: string, players: Player[]) {
+    this.players = players;
     this.gameID = gameID;
     this.state = GameState.MissionStart;
   }
@@ -46,18 +46,10 @@ export class Game {
   public setupGame = () => {
     this.setupMission();
 
-    // Task distribution
     const taskDeck: Task[] = this.generateTaskDeck();
     this.tasks = taskDeck.splice(0, this.taskCount);
-    // For temporary task distribution
-    const firstPlayerIndex = this.players.findIndex((p) => p.isFirstPlayer);
-    // Distribute tasks
-    this.tasks.forEach((task, i) => {
-      this.players[(i + firstPlayerIndex) % this.players.length].tasks.push(
-        task
-      );
-    });
 
+    this.state = GameState.TaskSelection;
     console.log(this.tasks);
   };
 
@@ -87,12 +79,12 @@ export class Game {
   };
 
   public getPlayer = (id: string) => {
-    return this.players.find((player: Player) => player.name === id);
+    return this.players.find((player: Player) => player.socketID === id);
   };
 
   public getNextPlayer = (id: string) => {
     const index = this.players.findIndex(
-      (player: Player) => player.name === id
+      (player: Player) => player.socketID === id
     );
     if (index === this.players.length - 1) {
       return this.players[0];
@@ -103,6 +95,24 @@ export class Game {
 
   public isLastPlayer = (player: Player) => {
     return this.getNextPlayer(player.name).isFirstPlayer;
+  };
+
+  public selectTask = (turn: Turn) => {
+    const { playerID, card } = turn;
+    const currentPlayer = this.getPlayer(playerID);
+    const nextPlayer = this.getNextPlayer(playerID);
+    if (this.taskChoiceIsValid(turn)) {
+      currentPlayer.tasks.push(card as Task);
+      this.tasks = this.tasks.filter(
+        (task) => !(task.suit === card.suit && task.value === card.value)
+      );
+      currentPlayer.isTurn = false;
+      nextPlayer.isTurn = true;
+      console.log(this.players.map((p) => p.isTurn));
+      if (this.tasks.length === 0) {
+        this.state = GameState.TrickSetup;
+      }
+    }
   };
 
   public playTurn = (turn: Turn) => {
@@ -210,10 +220,25 @@ export class Game {
       trickStarted && player.hand.some((c) => this.trick.suit === c.suit);
 
     const isValid =
-      card.suit === Suit.Rocket ||
-      (this.trick != null && card.suit === this.trick.suit) ||
-      !hasRequiredSuit;
+      this.state === GameState.TrickOngoing &&
+      (card.suit === Suit.Rocket ||
+        (this.trick != null && card.suit === this.trick.suit) ||
+        !hasRequiredSuit);
 
     return isTurn && hasCard && (!trickStarted || isValid);
+  };
+
+  public taskChoiceIsValid = (turn: Turn): boolean => {
+    const { playerID, card } = turn;
+    const player = this.getPlayer(playerID);
+
+    console.log(player.name, "chose: ", card);
+    const isTurn = player.isTurn;
+
+    const gameHasRequiredSuit = this.tasks.some(
+      (task) => task.suit === card.suit && task.value === card.value
+    );
+
+    return gameHasRequiredSuit && isTurn;
   };
 }
