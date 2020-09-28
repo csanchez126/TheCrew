@@ -6,7 +6,7 @@ export class Game {
   tasks: Task[] = [];
   trick: Trick;
   currentTrickWinner: Player;
-  taskCount: number = 6;
+  taskCount: number = 3;
   state: GameState;
 
   constructor(gameID: string, players: Player[]) {

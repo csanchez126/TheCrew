@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { GameContext } from "../App";
 import { Card, Game, Player, Task, Turn } from "../models";
 import "../App.scss";
-import { CardComponent } from "./Card";
+import { CardComponent } from "./CardComponent";
 import { CardType } from "../enums";
 import { getCurrentPlayer } from "../utils/GameUtils";
 

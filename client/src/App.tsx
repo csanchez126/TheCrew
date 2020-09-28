@@ -1,10 +1,11 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import socketIOClient from "socket.io-client";
 import "./App.scss";
-import { CardComponent } from "./components/Card";
+import { CardComponent } from "./components/CardComponent";
+import { Communication } from "./components/Communication";
 import { PlayerTasks } from "./components/PlayerTasks";
 import { TaskSelection } from "./components/TaskSelection";
-import { CardType, GameState, Suit } from "./enums";
+import { CardType, CommStatus, GameState, Suit } from "./enums";
 import { Turn, Player, Card, Trick, Game, Task } from "./models";
 const ENDPOINT = "localhost:4001";
 
@@ -72,13 +73,13 @@ export default function App() {
   };
 
   const getPlayingAreaComponent = (): any => {
-    console.log(player);
     switch (game.state) {
       case GameState.MissionStart:
         return;
       case GameState.TaskSelection:
         return <TaskSelection player={player} />;
       case GameState.TrickSetup:
+        return <Communication player={player} />;
       case GameState.TrickOngoing:
       case GameState.TrickEnd:
       case GameState.MissionFailed:

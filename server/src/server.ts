@@ -21,17 +21,17 @@ let game: Game;
 
 const gameID = "Salut";
 const names = ["carlos", "jean-simon", "jo", "pier-luc"];
-const nameIndex = 0;
+const playerCount = 4;
 
 io.on("connection", (socket) => {
   console.log("User connected", socket.id);
   socket.emit("new player", { message: "welcome" });
 
-  if (users.length < 2) {
+  if (users.length < playerCount) {
     users.push(socket);
   }
 
-  if (users.length === 2) {
+  if (users.length === playerCount) {
     // Start game
     game = new Game(
       gameID,

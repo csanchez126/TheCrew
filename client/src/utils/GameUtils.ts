@@ -1,5 +1,30 @@
-import { Game, Player } from "../models";
+import { CommStatus, Suit } from "../enums";
+import { Card, Game, Player } from "../models";
 
 export const getCurrentPlayer = (game: Game): Player => {
   return game.players.find((p) => p.isTurn);
+};
+
+export const getCardsToCommunicate = (hand: Card[]): Card[] => {
+  let cardsToComm: Card[] = [];
+  const suitInts = Object.values(Suit).filter((val) => !isNaN(val as any));
+  console.log(suitInts);
+  suitInts
+    .filter((suit) => suit !== Suit.Rocket)
+    .forEach((suit) => {
+      //For each colored suit, get unique card or highest and lowest
+      const suitedCards = hand
+        .filter((card) => card.suit === suit)
+        .sort((cardA, cardB) => cardA.value - cardB.value);
+      if (suitedCards.length === 1) {
+        suitedCards[0].commStatus = CommStatus.Only;
+        cardsToComm.push(suitedCards[0]);
+      } else if (suitedCards.length > 1) {
+        suitedCards[0].commStatus = CommStatus.Lowest;
+        suitedCards[suitedCards.length - 1].commStatus = CommStatus.Highest;
+        cardsToComm.push(suitedCards[0], suitedCards[suitedCards.length - 1]);
+      }
+    });
+
+  return cardsToComm;
 };

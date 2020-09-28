@@ -2,7 +2,7 @@ import React from "react";
 import { GameContext } from "../App";
 import { CardType } from "../enums";
 import { Player } from "../models";
-import { CardComponent } from "./Card";
+import { CardComponent } from "./CardComponent";
 
 interface Props {
   player: Player;
