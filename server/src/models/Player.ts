@@ -9,6 +9,7 @@ export class Player {
   isCommander: boolean = false;
   isFirstPlayer: boolean = false;
   isTurn: boolean = false;
+  canCommunicate: boolean = true;
   constructor(socketID: string, name: string) {
     this.socketID = socketID;
     this.name = name;

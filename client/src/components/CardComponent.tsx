@@ -1,7 +1,7 @@
 import React from "react";
 import { CardType, Suit } from "../enums";
 import { Card } from "../models/Card";
-
+import "./CardComponent.scss";
 interface CardProps {
   card: Card;
   cardType?: CardType;
@@ -34,6 +34,8 @@ export const CardComponent = (props: CardProps) => {
         return "task";
       case CardType.Trick:
         return "trick";
+      case CardType.Communication:
+        return "communication";
       case CardType.Hand:
       default:
         return "card";

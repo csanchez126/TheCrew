@@ -2,7 +2,7 @@
 
 .app-container {
   width: 100%;
-  // overflow: hidden;
+  overflow: hidden;
   box-sizing: border-box;
   margin: auto;
   height: 100vh;
@@ -14,9 +14,9 @@
   p {
     margin: 0;
   }
+
   .controls {
     display: flex;
-    margin-bottom: 20px;
     color: white;
     .info {
       display: flex;
@@ -74,9 +74,18 @@
       min-width: 0;
       flex: 1;
       display: flex;
+      border: 1px solid white;
 
       #hand-container:last-child {
         flex: 0 0 auto;
+      }
+      .card {
+        box-shadow: 4px 4px 12px 12px rgba(black, 0.2);
+        transition: top 0.25s ease 0s;
+        top: 30px;
+      }
+      .card:hover {
+        top: -10px;
       }
     }
 
@@ -85,77 +94,6 @@
       min-width: 300px;
       height: 100%;
     }
-  }
-
-  .card {
-    box-shadow: 4px 4px 12px 12px rgba(black, 0.2);
-    transition: top 0.25s ease 0s;
-    top: 50px;
-    position: relative;
-    height: 200px;
-    min-width: 128px;
-    border: 5px solid white;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    cursor: pointer;
-    .small-value {
-      height: 35px;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      p {
-        margin: 0 5px;
-        color: white;
-        font-size: 25px;
-      }
-    }
-    .small-value:last-child {
-      transform: rotate(180deg);
-    }
-    .big-value {
-      flex: 1;
-      vertical-align: middle;
-      p {
-        margin: 0;
-        color: white;
-        font-size: 100px;
-      }
-    }
-  }
-  .card:hover {
-    top: 0px;
-  }
-  .card.disabled {
-    cursor: not-allowed;
-  }
-  .card:not(:first-child) {
-    --margin-left: -4rem;
-  }
-  .trick,
-  .task {
-    box-sizing: border-box;
-    height: 100px;
-    width: 64px;
-    border: 2.5px solid white;
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 10px;
-    cursor: pointer;
-    p {
-      color: white;
-      font-size: 50px;
-      margin: 0;
-    }
-  }
-  .task.disabled,
-  .trick.disabled {
-    cursor: not-allowed;
   }
 
   h1,
