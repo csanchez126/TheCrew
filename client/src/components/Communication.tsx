@@ -19,7 +19,7 @@ export const Communication = (props: Props) => {
         </div>
         <div className="card-communication-container">
           {getCardsToCommunicate(player.hand).map((card) => (
-            <CardComponent card={card} cardType={CardType.Hand} />
+            <CardComponent card={card} cardType={CardType.Communication} />
           ))}
         </div>
       </div>

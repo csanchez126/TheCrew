@@ -1,6 +1,7 @@
 import React from "react";
-import { CardType, Suit } from "../enums";
+import { CardType, CommStatus, Suit } from "../enums";
 import { Card } from "../models/Card";
+import commTokenGreen from "../img/commTokenGreen.png";
 import "./CardComponent.scss";
 interface CardProps {
   card: Card;
@@ -48,6 +49,26 @@ export const CardComponent = (props: CardProps) => {
     }
   };
 
+  const cardHeaderFooter = (showCommtoken: boolean) =>
+    (props.cardType === CardType.Hand ||
+      props.cardType === CardType.Communication) && (
+      <div className="small-value">
+        <p>
+          {card.value}
+          {card.suit === Suit.Rocket && "🚀"}
+        </p>
+        {showCommtoken && props.cardType === CardType.Communication && (
+          <div className="comm-token--high-low">
+            <img src={commTokenGreen} alt="" />
+          </div>
+        )}
+        <p>
+          {card.suit === Suit.Rocket && "🚀"}
+          {card.value}
+        </p>
+      </div>
+    );
+
   return (
     <div
       onClick={onCardClick}
@@ -56,33 +77,18 @@ export const CardComponent = (props: CardProps) => {
       }`}
       style={{ marginLeft: props.offset || 0 }}
     >
-      {props.cardType === CardType.Hand && (
-        <div className="small-value">
-          <p>
-            {card.value}
-            {card.suit === Suit.Rocket && "🚀"}
-          </p>
-          <p>
-            {card.suit === Suit.Rocket && "🚀"}
-            {card.value}
-          </p>
-        </div>
-      )}
+      {cardHeaderFooter(card.commStatus === CommStatus.Highest)}
       <div className="big-value">
         <p>{card.value}</p>
+        {props.cardType === CardType.Communication &&
+          card.commStatus === CommStatus.Only && (
+            <div className="comm-token">
+              <img src={commTokenGreen} alt="" />
+            </div>
+          )}
       </div>
-      {props.cardType === CardType.Hand && (
-        <div className="small-value">
-          <p>
-            {card.value}
-            {card.suit === Suit.Rocket && "🚀"}
-          </p>
-          <p>
-            {card.suit === Suit.Rocket && "🚀"}
-            {card.value}
-          </p>
-        </div>
-      )}
+
+      {cardHeaderFooter(card.commStatus === CommStatus.Lowest)}
     </div>
   );
 };
