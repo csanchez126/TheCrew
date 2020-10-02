@@ -1,8 +1,9 @@
 .card,
-.communication {
+.communication,
+.communicated {
   position: relative;
   height: 200px;
-  min-width: 128px;
+  width: 128px;
   border: 5px solid white;
   border-radius: 10px;
   display: flex;
@@ -55,6 +56,16 @@
   }
 }
 
+.task,
+.trick,
+.communication {
+  margin-right: 10px;
+}
+.task:last-child,
+.trick:last-child,
+.communication:last-child {
+  margin-right: 0px;
+}
 .card.disabled {
   cursor: not-allowed;
 }
@@ -80,4 +91,9 @@
 .task.disabled,
 .trick.disabled {
   cursor: not-allowed;
+}
+
+.communicated {
+  border-style: double;
+  border-color: black;
 }

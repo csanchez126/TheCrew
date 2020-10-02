@@ -1,6 +1,7 @@
 import express from "express";
 import http from "http";
 import socketIO, { Socket } from "socket.io";
+import { PlayerStatus } from "./enums";
 import { GameManager } from "./managers/GameManager";
 import { Game } from "./models/Game";
 import { Player } from "./models/Player";
@@ -21,7 +22,7 @@ let game: Game;
 
 const gameID = "Salut";
 const names = ["carlos", "jean-simon", "jo", "pier-luc"];
-const playerCount = 4;
+const playerCount = 2;
 
 io.on("connection", (socket) => {
   console.log("User connected", socket.id);
@@ -50,6 +51,24 @@ io.on("connection", (socket) => {
     game.selectTask(turn);
     updatePlayers();
   });
+
+  socket.on("select communication card", (turn: Turn) => {
+    game.selectCommunicationCard(turn);
+    updatePlayers();
+  });
+
+  socket.on("cancel communication", (playerID: string) => {
+    game.cancelCommunication(playerID);
+    updatePlayers();
+  });
+
+  socket.on(
+    "set communication status",
+    (playerID: string, status: PlayerStatus) => {
+      game.setCommunicationStatus(playerID, status);
+      updatePlayers();
+    }
+  );
 
   socket.on("disconnect", () => {
     users = users.filter((p) => p.id !== socket.id);

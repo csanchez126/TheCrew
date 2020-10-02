@@ -6,6 +6,7 @@ import "./CardComponent.scss";
 interface CardProps {
   card: Card;
   cardType?: CardType;
+  class?: string;
   disabled?: boolean;
   offset?: number;
   onClick?: (card: Card) => void;
@@ -72,9 +73,11 @@ export const CardComponent = (props: CardProps) => {
   return (
     <div
       onClick={onCardClick}
-      className={`${getCardTypeClass()} ${getCardColorClass(card.suit)} ${
-        props.disabled ? "disabled" : ""
-      }`}
+      className={`${getCardTypeClass()} 
+        ${getCardColorClass(card.suit)} 
+        ${props.disabled ? "disabled" : ""} 
+        ${props.class ? props.class : ""}
+        ${card.commStatus !== CommStatus.None ? "communicated" : ""}`}
       style={{ marginLeft: props.offset || 0 }}
     >
       {cardHeaderFooter(card.commStatus === CommStatus.Highest)}

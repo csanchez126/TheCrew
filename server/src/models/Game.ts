@@ -1,4 +1,4 @@
-import { GameState, Suit } from "../enums";
+import { CommStatus, GameState, PlayerStatus, Suit } from "../enums";
 import { Card, Player, Task, Trick, Turn } from "./";
 export class Game {
   gameID: string;
@@ -6,7 +6,7 @@ export class Game {
   tasks: Task[] = [];
   trick: Trick;
   currentTrickWinner: Player;
-  taskCount: number = 1;
+  taskCount: number = 2;
   state: GameState;
 
   constructor(gameID: string, players: Player[]) {
@@ -20,7 +20,7 @@ export class Game {
     const suitInts = Object.values(Suit).filter((val) => !isNaN(val as any));
     // Generate a game deck
     suitInts.forEach((suit) => {
-      for (let i = 1; i <= 9; i += 1) {
+      for (let i = 1; i <= 4; i += 1) {
         if (suit === Suit.Rocket && i > 4) {
           continue;
         } else {
@@ -113,6 +113,50 @@ export class Game {
         this.state = GameState.TrickSetup;
       }
     }
+  };
+
+  public selectCommunicationCard = (turn: Turn) => {
+    console.log(turn);
+    const { card, playerID } = turn;
+    const player = this.getPlayer(playerID);
+    if (this.communicationCardValid(turn)) {
+      player.hand = player.hand.map((c) => {
+        if (c.value === card.value && c.suit === card.suit) {
+          c = card;
+        } else {
+          // Make sure no other card get flagged for comm
+          c.commStatus = CommStatus.None;
+        }
+        return c;
+      });
+    }
+  };
+
+  public cancelCommunication = (playerID: string) => {
+    const player = this.getPlayer(playerID);
+    player.hand.forEach((c) => {
+      c.commStatus = CommStatus.None;
+    });
+  };
+
+  public setCommunicationStatus = (playerID: string, status: PlayerStatus) => {
+    this.setPlayerStatus(playerID, status);
+    if (this.isEveryPlayerReady()) {
+      this.state = GameState.TrickOngoing;
+    }
+  };
+
+  public setPlayerStatus = (playerID: string, status: PlayerStatus) => {
+    const player = this.getPlayer(playerID);
+    player.status = status;
+  };
+
+  public startTrick = () => {
+    this.state = GameState.TrickOngoing;
+  };
+
+  public isEveryPlayerReady = () => {
+    return this.players.every((p) => p.status === PlayerStatus.Standby);
   };
 
   public playTurn = (turn: Turn) => {
@@ -240,5 +284,34 @@ export class Game {
     );
 
     return gameHasRequiredSuit && isTurn;
+  };
+
+  public communicationCardValid = (turn: Turn): boolean => {
+    const { card, playerID } = turn;
+    let isValid: boolean = card.suit !== Suit.Rocket;
+    if (isValid) {
+      const player = this.getPlayer(playerID);
+      const filteredHandValues = player.hand
+        .filter((handCard) => handCard.suit === card.suit)
+        .map((c) => c.value);
+      switch (card.commStatus) {
+        case CommStatus.Highest:
+          isValid = isValid && Math.max(...filteredHandValues) === card.value;
+          break;
+        case CommStatus.Lowest:
+          isValid = isValid && Math.min(...filteredHandValues) === card.value;
+          break;
+        case CommStatus.Only:
+          isValid =
+            isValid &&
+            filteredHandValues.length === 1 &&
+            filteredHandValues[0] === card.value;
+          break;
+        case CommStatus.None:
+          isValid = false;
+          break;
+      }
+    }
+    return isValid;
   };
 }

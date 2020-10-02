@@ -2,6 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import socketIOClient from "socket.io-client";
 import "./App.scss";
 import { CardComponent } from "./components/CardComponent";
+import { CommunicatedCard } from "./components/CommunicatedCard";
 import { Communication } from "./components/Communication";
 import { PlayerTasks } from "./components/PlayerTasks";
 import { TaskSelection } from "./components/TaskSelection";
@@ -116,6 +117,7 @@ export default function App() {
           <div id="hand-container">
             {player?.hand.map((card: Card, i: number, cards: Card[]) => (
               <CardComponent
+                class="hand-card"
                 cardType={CardType.Hand}
                 disabled={
                   !player.isTurn ||
@@ -134,7 +136,9 @@ export default function App() {
               />
             ))}
           </div>
-          <div className="communicated-card"></div>
+          <div className="communicated-card">
+            <CommunicatedCard player={player} />
+          </div>
         </div>
       </div>
     </GameContext.Provider>

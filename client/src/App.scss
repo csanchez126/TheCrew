@@ -42,10 +42,37 @@
       flex: 1;
       align-items: center;
       min-height: 0;
+      justify-content: space-evenly;
       .task-container,
       .card-communication-container {
-        border: 1px solid pink;
         display: flex;
+      }
+      input[type="button"] {
+        width: 200px;
+        height: 60px;
+        font-weight: bold;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .communication-card {
+        transition: top 0.25s ease 0s;
+        top: 0px;
+      }
+
+      .communication-card.selected {
+        top: -30px;
+        border-style: double;
+      }
+    }
+    .card-communication {
+      input[type="checkbox"] {
+        width: 35px;
+        height: 35px;
+      }
+      label {
+        background-color: white;
+        font-size: 35px;
       }
     }
   }
@@ -56,17 +83,26 @@
     border: 1px solid pink;
     display: flex;
     align-items: flex-end;
-    .player-tasks {
-      border: 1px solid white;
+    .player-tasks,
+    .communicated-card {
       min-width: 300px;
       height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      .player-tasks-array {
-        width: 100%;
+      .header {
+        height: 35px;
+      }
+      .header,
+      .player-tasks-array,
+      .communicated-card-container {
         display: flex;
-        justify-content: space-evenly;
+        align-items: center;
+        justify-content: center;
+      }
+      .player-tasks-array,
+      .communicated-card-container {
+        flex: 1;
       }
     }
     #hand-container {
@@ -74,23 +110,20 @@
       min-width: 0;
       flex: 1;
       display: flex;
-      border: 1px solid white;
-
       #hand-container:last-child {
         flex: 0 0 auto;
       }
-      .card {
+      .hand-card {
         box-shadow: 4px 4px 12px 12px rgba(black, 0.2);
         transition: top 0.25s ease 0s;
         top: 30px;
       }
-      .card:hover {
+      .hand-card:hover {
         top: -10px;
       }
     }
 
     .communicated-card {
-      border: 1px solid white;
       min-width: 300px;
       height: 100%;
     }
@@ -100,6 +133,7 @@
   h2,
   h3 {
     background-color: white;
+    margin: 0;
   }
 
   //Suit colors
