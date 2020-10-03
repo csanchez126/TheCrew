@@ -1,0 +1,86 @@
+// Fonts to use :https://www.fontzillion.com/fonts/pixel-sagas/joystick?utm_source=fontsquirrel.com&utm_medium=matcherator_link&utm_campaign=joystick
+
+.app-container {
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: auto;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: url("../img/background.jpg");
+  background-repeat: no-repeat;
+  p {
+    margin: 0;
+  }
+
+  .controls {
+    display: flex;
+    color: white;
+    .info {
+      display: flex;
+      flex-direction: column;
+      width: 400px;
+      p {
+        margin-bottom: 3px;
+      }
+      .label {
+        font-weight: bold;
+      }
+    }
+  }
+  .playing-field {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .player-area {
+    height: 300px;
+    width: 100%;
+    border: 1px solid pink;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    background-color: white;
+    margin: 0;
+  }
+
+  //Suit colors
+  .rocket {
+    background-color: #010101;
+  }
+  .blue {
+    background-color: #1f9aaa;
+  }
+  .pink {
+    background-color: #d64888;
+  }
+  .green {
+    background-color: #6ac957;
+  }
+  .yellow {
+    background-color: #ecac1c;
+  }
+  .rocket.disabled {
+    background-color: #828282;
+  }
+  .blue.disabled {
+    background-color: #91e7f3;
+  }
+  .pink.disabled {
+    background-color: #f1b2ce;
+  }
+  .green.disabled {
+    background-color: #bce8b3;
+  }
+  .yellow.disabled {
+    background-color: #ffe4a7;
+  }
+}

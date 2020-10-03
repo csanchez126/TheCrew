@@ -1,16 +1,13 @@
-import { render } from "node-sass";
 import React, { useContext } from "react";
-import { useEffect } from "react";
 import { GameContext } from "../App";
-import { Card, Game, Player, Task, Turn } from "../models";
-import "../App.scss";
+import { Card } from "../models";
 import { CardComponent } from "./CardComponent";
 import { CardType } from "../enums";
 import { getCurrentPlayer } from "../utils/GameUtils";
 import "../css/TaskSelection.scss";
 
 export const TaskSelection = () => {
-  const gameStore = React.useContext(GameContext);
+  const gameStore = useContext(GameContext);
   const { player } = gameStore;
 
   const onTaskClick = (card: Card) => {

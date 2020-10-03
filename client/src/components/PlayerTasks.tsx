@@ -1,7 +1,6 @@
 import React from "react";
-import { GameContext } from "../App";
 import { CardType } from "../enums";
-import { Player, Task } from "../models";
+import { Player } from "../models";
 import { CardComponent } from "./CardComponent";
 import "../css/PlayerTasks.scss";
 

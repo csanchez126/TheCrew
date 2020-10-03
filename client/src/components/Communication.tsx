@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { isJsxSelfClosingElement } from "typescript";
+import React, { useState } from "react";
 import { GameContext } from "../App";
-import { CardType, CommStatus, PlayerStatus } from "../enums";
+import { CardType, PlayerStatus } from "../enums";
 import { Card, Player, Turn } from "../models";
 import { getCardsToCommunicate } from "../utils/GameUtils";
 import { CardComponent } from "./CardComponent";

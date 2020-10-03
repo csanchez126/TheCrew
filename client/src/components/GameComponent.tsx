@@ -1,13 +1,10 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React from "react";
 import { GameContext } from "../App";
-import "../App.scss";
-import { CardComponent } from "./CardComponent";
 import { CommunicatedCard } from "./CommunicatedCard";
 import { Communication } from "./Communication";
 import { PlayerTasks } from "./PlayerTasks";
 import { TaskSelection } from "./TaskSelection";
-import { CardType, CommStatus, GameState, Suit } from "../enums";
-import { Turn, Player, Card, Trick, Game, Task } from "../models";
+import { GameState } from "../enums";
 import { observer } from "mobx-react-lite";
 import { TrickPlay } from "./TrickPlay";
 import "../css/GameComponent.scss";
@@ -37,7 +34,7 @@ export const GameComponent = observer(() => {
       <div className="controls">
         <div className="info">
           <p>
-            <span className="label">Player/Socket ID:</span>{" "}
+            <span className="label">Player/Socket ID: </span>
             {gameStore.player?.name}
           </p>
           <p>
