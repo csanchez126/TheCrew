@@ -8,15 +8,12 @@ import { CardComponent } from "./CardComponent";
 import { CardType } from "../enums";
 import { getCurrentPlayer } from "../utils/GameUtils";
 
-interface Props {
-  player: Player;
-}
-export const TaskSelection = (props: Props) => {
-  const { game, socket } = React.useContext(GameContext);
-  const { player } = props;
+export const TaskSelection = () => {
+  const gameStore = React.useContext(GameContext);
+  const { player } = gameStore;
 
   const onTaskClick = (card: Card) => {
-    socket.emit("select task", new Turn(player.socketID, card));
+    gameStore.selectTask(card);
   };
 
   const getTaskSelectionStatus = () => {
@@ -24,7 +21,7 @@ export const TaskSelection = (props: Props) => {
     if (isTurn) {
       return "Your turn to pick a task";
     } else {
-      const currentPlayer = getCurrentPlayer(game).name;
+      const currentPlayer = getCurrentPlayer(gameStore.game).name;
       return `${currentPlayer} is selecting a task`;
     }
   };
@@ -34,7 +31,7 @@ export const TaskSelection = (props: Props) => {
       <h1>Select Tasks</h1>
       <h2>{getTaskSelectionStatus()}</h2>
       <div className="task-container">
-        {game.tasks.map((task) => (
+        {gameStore.game.tasks.map((task) => (
           <CardComponent
             disabled={!player.isTurn}
             card={task}

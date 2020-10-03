@@ -9,21 +9,18 @@ import { CardComponent } from "./CardComponent";
 interface Props {
   player: Player;
 }
-export const Communication = (props: Props) => {
-  const { game, socket } = React.useContext(GameContext);
-  const { player } = props;
+export const Communication = () => {
+  const gameStore = React.useContext(GameContext);
+  const { player } = gameStore;
   const [selectedCard, setSelectedCard] = useState(null);
   const [isPlayerReady, setIsPlayerReady] = useState(false);
 
   const onCardClick = (card: Card) => {
-    console.log(card);
     if (isSelected(card)) {
-      socket.emit("cancel communication", player.socketID);
+      gameStore.cancelCommunication();
       setSelectedCard(null);
     } else {
-      const turn = new Turn(player.socketID, card);
-      console.log("turn", turn);
-      socket.emit("select communication card", turn);
+      gameStore.selectCommCard(card);
       setSelectedCard(card);
     }
   };
@@ -35,7 +32,7 @@ export const Communication = (props: Props) => {
     const status = playerReady
       ? PlayerStatus.Standby
       : PlayerStatus.ActionPending;
-    socket.emit("set communication status", player.socketID, status);
+    gameStore.setPlayerState(status);
     setIsPlayerReady(e.currentTarget.checked);
   };
 
