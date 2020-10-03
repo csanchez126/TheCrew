@@ -1,0 +1,9 @@
+.other-players-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  .other-player {
+    display: flex;
+  }
+}

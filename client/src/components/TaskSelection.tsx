@@ -7,6 +7,7 @@ import "../App.scss";
 import { CardComponent } from "./CardComponent";
 import { CardType } from "../enums";
 import { getCurrentPlayer } from "../utils/GameUtils";
+import "../css/TaskSelection.scss";
 
 export const TaskSelection = () => {
   const gameStore = React.useContext(GameContext);

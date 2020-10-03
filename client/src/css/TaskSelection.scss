@@ -1,0 +1,12 @@
+.task-selection {
+  border: 1px solid green;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  min-height: 0;
+  justify-content: space-evenly;
+  .task-container {
+    display: flex;
+  }
+}

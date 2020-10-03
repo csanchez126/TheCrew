@@ -5,7 +5,7 @@ import { CardType, CommStatus, PlayerStatus } from "../enums";
 import { Card, Player, Turn } from "../models";
 import { getCardsToCommunicate } from "../utils/GameUtils";
 import { CardComponent } from "./CardComponent";
-
+import "../css/Communication.scss";
 interface Props {
   player: Player;
 }

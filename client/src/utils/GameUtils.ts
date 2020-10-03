@@ -5,6 +5,16 @@ export const getCurrentPlayer = (game: Game): Player => {
   return game.players.find((p) => p.isTurn);
 };
 
+export const getPlayerName = (game: Game, playerID: string): string => {
+  const player = game.players.find((p) => p.socketID === playerID);
+
+  return player ? player.name : "Unnamed";
+};
+
+export const getOtherPlayers = (game: Game, playerID: string): Player[] => {
+  return game.players.filter((p) => p.socketID !== playerID);
+};
+
 export const getCardsToCommunicate = (hand: Card[]): Card[] => {
   let cardsToComm: Card[] = [];
   const suitInts = Object.values(Suit).filter((val) => !isNaN(val as any));

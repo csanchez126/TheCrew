@@ -1,7 +1,7 @@
-import { Card } from ".";
+import { Turn } from ".";
 import { Suit } from "../enums/Suit";
 
 export class Trick {
   suit: Suit = null;
-  cards: Card[] = [];
+  turns: Turn[] = [];
 }

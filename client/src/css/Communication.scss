@@ -1,0 +1,29 @@
+.card-communication {
+  border: 1px solid green;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  min-height: 0;
+  justify-content: space-evenly;
+  .card-communication-container {
+    display: flex;
+  }
+  .communication-card {
+    transition: top 0.25s ease 0s;
+    top: 0px;
+  }
+
+  .communication-card.selected {
+    top: -30px;
+    border-style: double;
+  }
+  input[type="checkbox"] {
+    width: 35px;
+    height: 35px;
+  }
+  label {
+    background-color: white;
+    font-size: 35px;
+  }
+}

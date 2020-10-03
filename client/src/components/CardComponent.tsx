@@ -2,7 +2,7 @@ import React from "react";
 import { CardType, CommStatus, Suit } from "../enums";
 import { Card } from "../models/Card";
 import commTokenGreen from "../img/commTokenGreen.png";
-import "./CardComponent.scss";
+import "../css/CardComponent.scss";
 interface CardProps {
   card: Card;
   cardType?: CardType;

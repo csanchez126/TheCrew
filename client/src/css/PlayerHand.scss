@@ -1,0 +1,17 @@
+#hand-container {
+  height: 200px;
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  #hand-container:last-child {
+    flex: 0 0 auto;
+  }
+  .hand-card {
+    box-shadow: 4px 4px 12px 12px rgba(black, 0.2);
+    transition: top 0.25s ease 0s;
+    top: 30px;
+  }
+  .hand-card:hover {
+    top: -10px;
+  }
+}

@@ -166,16 +166,16 @@ export class Game {
 
     if (this.moveIsValid(turn)) {
       this.removeTurnCard(turn);
-      this.trick.cards.push(card);
+      this.trick.turns.push(turn);
       currentPlayer.isTurn = false;
       nextPlayer.isTurn = true;
       // First move
-      if (this.trick.cards.length === 1) {
+      if (this.trick.turns.length === 1) {
         this.trick.suit = card.suit;
         this.currentTrickWinner = currentPlayer;
       }
       // Last move
-      else if (this.trick.cards.length === this.players.length) {
+      else if (this.trick.turns.length === this.players.length) {
         this.computeTrickWinner(turn);
         this.computeTrickEnd(turn);
       } else {
@@ -187,13 +187,13 @@ export class Game {
   public computeTrickWinner = (turn: Turn) => {
     let values: number[];
     if (turn.card.suit === Suit.Rocket) {
-      values = this.trick.cards
-        .filter((c) => c.suit === Suit.Rocket)
-        .map((c) => c.value);
+      values = this.trick.turns
+        .filter((trickTurn) => trickTurn.card.suit === Suit.Rocket)
+        .map((trickTurn) => trickTurn.card.value);
     } else if (this.trick.suit === turn.card.suit) {
-      values = this.trick.cards
-        .filter((c) => c.suit === this.trick.suit)
-        .map((c) => c.value);
+      values = this.trick.turns
+        .filter((trickTurn) => trickTurn.card.suit === this.trick.suit)
+        .map((trickTurn) => trickTurn.card.value);
     }
     if (Math.max(...values, turn.card.value) === turn.card.value) {
       this.currentTrickWinner = this.getPlayer(turn.playerID);
@@ -209,11 +209,12 @@ export class Game {
     // Check if trick winner has task
     //   Check task requirement
     //      If valid, trick won, game continues
-    this.trick.cards.forEach((gameTrick) => {
+    this.trick.turns.forEach((trickTurn) => {
       if (
         trickWinner.tasks.some(
           (task) =>
-            gameTrick.suit === task.suit && gameTrick.value === task.value
+            trickTurn.card.suit === task.suit &&
+            trickTurn.card.value === task.value
         )
       ) {
         // Should check task req here?
@@ -227,11 +228,12 @@ export class Game {
     this.players
       .filter((p) => p.name !== turn.playerID)
       .forEach((player) => {
-        this.trick.cards.forEach((gameTrick) => {
+        this.trick.turns.forEach((gameTrick) => {
           if (
             player.tasks.some(
               (task) =>
-                gameTrick.suit === task.suit && gameTrick.value === task.value
+                gameTrick.card.suit === task.suit &&
+                gameTrick.card.value === task.value
             )
           ) {
             if (!trickValid) {

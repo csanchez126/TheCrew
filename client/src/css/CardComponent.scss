@@ -1,5 +1,6 @@
 .card,
 .communication,
+.trick,
 .communicated {
   position: relative;
   height: 200px;
@@ -70,7 +71,6 @@
   cursor: not-allowed;
 }
 
-.trick,
 .task {
   box-sizing: border-box;
   height: 100px;

@@ -34,47 +34,6 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    .card-communication,
-    .task-selection {
-      border: 1px solid green;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      align-items: center;
-      min-height: 0;
-      justify-content: space-evenly;
-      .task-container,
-      .card-communication-container {
-        display: flex;
-      }
-      input[type="button"] {
-        width: 200px;
-        height: 60px;
-        font-weight: bold;
-        font-size: 20px;
-        cursor: pointer;
-      }
-
-      .communication-card {
-        transition: top 0.25s ease 0s;
-        top: 0px;
-      }
-
-      .communication-card.selected {
-        top: -30px;
-        border-style: double;
-      }
-    }
-    .card-communication {
-      input[type="checkbox"] {
-        width: 35px;
-        height: 35px;
-      }
-      label {
-        background-color: white;
-        font-size: 35px;
-      }
-    }
   }
 
   .player-area {
@@ -83,55 +42,12 @@
     border: 1px solid pink;
     display: flex;
     align-items: flex-end;
-    .player-tasks,
-    .communicated-card {
-      min-width: 300px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      .header {
-        height: 35px;
-      }
-      .header,
-      .player-tasks-array,
-      .communicated-card-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .player-tasks-array,
-      .communicated-card-container {
-        flex: 1;
-      }
-    }
-    #hand-container {
-      height: 200px;
-      min-width: 0;
-      flex: 1;
-      display: flex;
-      #hand-container:last-child {
-        flex: 0 0 auto;
-      }
-      .hand-card {
-        box-shadow: 4px 4px 12px 12px rgba(black, 0.2);
-        transition: top 0.25s ease 0s;
-        top: 30px;
-      }
-      .hand-card:hover {
-        top: -10px;
-      }
-    }
-
-    .communicated-card {
-      min-width: 300px;
-      height: 100%;
-    }
   }
 
   h1,
   h2,
-  h3 {
+  h3,
+  h4 {
     background-color: white;
     margin: 0;
   }
