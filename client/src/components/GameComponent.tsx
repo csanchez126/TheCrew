@@ -49,7 +49,7 @@ export const GameComponent = observer(() => {
       </div>
       <div className="player-area">
         <PlayerTasks player={gameStore.player} />
-        <PlayerHand />
+        <PlayerHand player={gameStore.player} />
         <CommunicatedCard player={gameStore.player} />
       </div>
     </div>

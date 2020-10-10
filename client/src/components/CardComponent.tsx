@@ -3,6 +3,7 @@ import { CardType, CommStatus, Suit } from "../enums";
 import { Card } from "../models/Card";
 import commTokenGreen from "../img/commTokenGreen.png";
 import "../css/CardComponent.scss";
+import { spawn } from "child_process";
 interface CardProps {
   card: Card;
   cardType?: CardType;
@@ -56,7 +57,9 @@ export const CardComponent = (props: CardProps) => {
       <div className="small-value">
         <p>
           {card.value}
-          {card.suit === Suit.Rocket && "🚀"}
+          {card.suit === Suit.Rocket && (
+            <span className="rocket-emoji">🚀</span>
+          )}
         </p>
         {showCommtoken && props.cardType === CardType.Communication && (
           <div className="comm-token--high-low">
@@ -64,7 +67,9 @@ export const CardComponent = (props: CardProps) => {
           </div>
         )}
         <p>
-          {card.suit === Suit.Rocket && "🚀"}
+          {card.suit === Suit.Rocket && (
+            <span className="rocket-emoji">🚀</span>
+          )}
           {card.value}
         </p>
       </div>

@@ -1,13 +1,17 @@
 import React, { useEffect, useLayoutEffect } from "react";
 import { GameContext } from "../App";
 import { CardType, GameState, Suit } from "../enums";
-import { Card, Turn } from "../models";
+import { Card, Player, Turn } from "../models";
 import { CardComponent } from "./CardComponent";
 import "../css/PlayerHand.scss";
+interface Props {
+  player: Player;
+}
+export const PlayerHand = (props: Props) => {
+  const { player } = props;
 
-export const PlayerHand = () => {
   const gameStore = React.useContext(GameContext);
-  const { player } = gameStore;
+  // const { player } = gameStore;
   const [handDivWidth, setHandDivWidth] = React.useState(0);
 
   useEffect(() => {
@@ -15,7 +19,7 @@ export const PlayerHand = () => {
     return () => {
       gameStore.disconnect();
     };
-  }, [window.innerWidth]);
+  }, []);
 
   useLayoutEffect(() => {
     window.addEventListener("resize", updateHandSpread);
@@ -35,13 +39,12 @@ export const PlayerHand = () => {
     const handDivWidth = (document.getElementById(
       "hand-container"
     ) as HTMLDivElement)?.offsetWidth;
-    console.log(handDivWidth);
     setHandDivWidth(handDivWidth);
   };
 
   const getCardOffset = (i: number) => {
     let offset = 0;
-    const CARD_WIDTH = 138;
+    const CARD_WIDTH = 105;
     if (i > 0 && player) {
       const handLength = player.hand.length;
       offset = (handDivWidth - CARD_WIDTH) / (handLength - 1) - CARD_WIDTH;

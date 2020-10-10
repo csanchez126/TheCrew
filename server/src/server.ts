@@ -22,7 +22,7 @@ let game: Game;
 
 const gameID = "Salut";
 const names = ["carlos", "jean-simon", "jo", "pier-luc"];
-const playerCount = 2;
+const playerCount = 3;
 
 io.on("connection", (socket) => {
   console.log("User connected", socket.id);

@@ -51,6 +51,7 @@ export class GameStore {
   updateGameState = (game: Game) => {
     this.game = game;
     this.player = this.game.players.find((p) => p.socketID === this.socket.id);
+    console.log(game)
   };
 
   disconnect = () => {

@@ -20,7 +20,7 @@ export class Game {
     const suitInts = Object.values(Suit).filter((val) => !isNaN(val as any));
     // Generate a game deck
     suitInts.forEach((suit) => {
-      for (let i = 1; i <= 4; i += 1) {
+      for (let i = 1; i <= 9; i += 1) {
         if (suit === Suit.Rocket && i > 4) {
           continue;
         } else {

@@ -5,7 +5,12 @@
   flex: 2;
   align-items: center;
   min-height: 0;
-  justify-content: space-evenly;
+  .header {
+    margin-bottom: 20px;
+    h4 {
+      background-color: white;
+    }
+  }
   .task-container {
     display: flex;
   }

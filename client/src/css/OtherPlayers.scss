@@ -3,7 +3,20 @@
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  .other-player {
+  .other-player,
+  .other-player-info {
     display: flex;
+    height: 200px;
+  }
+  .other-player-info {
+    flex-direction: column;
+    width: 150px;
+    .communication-status {
+      font-weight: bold;
+    }
+    h4,
+    p {
+      background-color: white;
+    }
   }
 }

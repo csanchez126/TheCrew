@@ -16,7 +16,7 @@ export const PlayerTasks = (props: Props) => {
       {player && (
         <React.Fragment>
           <div className="header">
-            <h3>My Tasks</h3>
+            <h3>Tasks</h3>
           </div>
           <div className="player-tasks-array">
             {player.tasks.map((task) => (
