@@ -18,11 +18,12 @@ export const CommunicatedCard = (props: Props) => {
             <h3>Communicated Card</h3>
           </div>
           <div className="communicated-card-container">
-            {player.hand
-              .filter((c) => c.commStatus !== CommStatus.None) // Get comm card
-              .map((task) => (
-                <CardComponent card={task} cardType={CardType.Communication} />
-              ))}
+            {player.communicatedCard && (
+              <CardComponent
+                card={player.communicatedCard}
+                cardType={CardType.Communication}
+              />
+            )}
           </div>
         </React.Fragment>
       )}

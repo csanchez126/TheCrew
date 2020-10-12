@@ -1,3 +1,4 @@
+import { cardsEqual } from "../utils/GameUtils";
 import { CommStatus, GameState, PlayerStatus, Suit } from "../enums";
 import { Card, Player, Task, Trick, Turn } from "./";
 export class Game {
@@ -103,9 +104,7 @@ export class Game {
     const nextPlayer = this.getNextPlayer(playerID);
     if (this.taskChoiceIsValid(turn)) {
       currentPlayer.tasks.push(card as Task);
-      this.tasks = this.tasks.filter(
-        (task) => !(task.suit === card.suit && task.value === card.value)
-      );
+      this.tasks = this.tasks.filter((task) => !cardsEqual(card, task));
       currentPlayer.isTurn = false;
       nextPlayer.isTurn = true;
       console.log(this.players.map((p) => p.isTurn));
@@ -116,13 +115,13 @@ export class Game {
   };
 
   public selectCommunicationCard = (turn: Turn) => {
-    console.log(turn);
     const { card, playerID } = turn;
     const player = this.getPlayer(playerID);
     if (this.communicationCardValid(turn)) {
       player.hand = player.hand.map((c) => {
-        if (c.value === card.value && c.suit === card.suit) {
+        if (cardsEqual(c, card)) {
           c = card;
+          player.communicatedCard = card;
         } else {
           // Make sure no other card get flagged for comm
           c.commStatus = CommStatus.None;
@@ -137,12 +136,13 @@ export class Game {
     player.hand.forEach((c) => {
       c.commStatus = CommStatus.None;
     });
+    player.communicatedCard = null;
   };
 
   public setCommunicationStatus = (playerID: string, status: PlayerStatus) => {
     this.setPlayerStatus(playerID, status);
     if (this.isEveryPlayerReady()) {
-      this.state = GameState.TrickOngoing;
+      this.startTrick();
     }
   };
 
@@ -153,6 +153,8 @@ export class Game {
 
   public startTrick = () => {
     this.state = GameState.TrickOngoing;
+    this.players.forEach((p) => (p.status = PlayerStatus.ActionPending));
+    this.trick = new Trick();
   };
 
   public isEveryPlayerReady = () => {
@@ -204,24 +206,23 @@ export class Game {
     const trickWinner = this.currentTrickWinner;
     console.log("trickWinner", trickWinner.name);
     const { card } = turn;
-    let trickValid = false;
+    let trickValid = true;
 
     // Check if trick winner has task
     //   Check task requirement
     //      If valid, trick won, game continues
     this.trick.turns.forEach((trickTurn) => {
-      if (
-        trickWinner.tasks.some(
-          (task) =>
-            trickTurn.card.suit === task.suit &&
-            trickTurn.card.value === task.value
-        )
-      ) {
+      const matchingTask: Task = trickWinner.tasks.find((c) =>
+        cardsEqual(trickTurn.card, c)
+      );
+      if (matchingTask !== undefined) {
         // Should check task req here?
         trickValid = true;
         console.log("winner has accomplished mission");
+        this.removeTask(trickWinner, matchingTask);
       }
     });
+
     // Else check if someone else has it
     //      if someone else has it, game ends
     // Else game continues
@@ -229,27 +230,25 @@ export class Game {
       .filter((p) => p.name !== turn.playerID)
       .forEach((player) => {
         this.trick.turns.forEach((gameTrick) => {
-          if (
-            player.tasks.some(
-              (task) =>
-                gameTrick.card.suit === task.suit &&
-                gameTrick.card.value === task.value
-            )
-          ) {
-            if (!trickValid) {
-              console.log("someone else should have won this task :(");
-            }
+          if (player.tasks.some((c) => cardsEqual(c, gameTrick.card))) {
+            trickValid = false;
           }
         });
       });
+
+    if (trickValid && this.players.every((p) => p.tasks.length === 0)) {
+      this.state = GameState.MissionVictory;
+    } else if (trickValid) {
+      this.state = GameState.TrickSetup;
+    } else {
+      this.state = GameState.MissionFailed;
+    }
   };
 
   public removeTurnCard = (turn: Turn) => {
     const player = this.getPlayer(turn.playerID);
     const card = turn.card;
-    player.hand = player.hand.filter(
-      (c) => !(c.suit === card.suit && c.value === card.value)
-    );
+    player.hand = player.hand.filter((c) => !cardsEqual(c, card));
   };
 
   public moveIsValid = (turn: Turn): boolean => {
@@ -259,9 +258,7 @@ export class Game {
 
     console.log("played: ", card);
     const isTurn = player.isTurn;
-    const hasCard = player.hand.some(
-      (c) => c.suit === card.suit && c.suit === card.suit
-    );
+    const hasCard = player.hand.some((c) => cardsEqual(c, card));
     const hasRequiredSuit =
       trickStarted && player.hand.some((c) => this.trick.suit === c.suit);
 
@@ -281,11 +278,9 @@ export class Game {
     console.log(player.name, "chose: ", card);
     const isTurn = player.isTurn;
 
-    const gameHasRequiredSuit = this.tasks.some(
-      (task) => task.suit === card.suit && task.value === card.value
-    );
+    const gameHasRequiredTask = this.tasks.some((c) => cardsEqual(c, card));
 
-    return gameHasRequiredSuit && isTurn;
+    return gameHasRequiredTask && isTurn;
   };
 
   public communicationCardValid = (turn: Turn): boolean => {
@@ -315,5 +310,17 @@ export class Game {
       }
     }
     return isValid;
+  };
+
+  public removeTask = (player: Player, task: Task) => {
+    player.tasks = player.tasks.filter((t) => !cardsEqual(t, task));
+  };
+
+  public resetTrick = () => {
+    this.currentTrickWinner.isFirstPlayer = true;
+    this.trick = new Trick();
+    this.players.forEach((p) => {
+      p.status = PlayerStatus.ActionPending;
+    });
   };
 }

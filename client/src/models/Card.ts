@@ -8,4 +8,7 @@ export class Card {
     this.suit = suit;
     this.value = value;
   }
+  equals = (card: Card) => {
+    return card.value === this.value && card.suit === this.suit;
+  };
 }

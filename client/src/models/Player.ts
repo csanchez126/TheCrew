@@ -10,6 +10,7 @@ export class Player {
   isFirstPlayer: boolean = false;
   isTurn: boolean = false;
   canCommunicate: boolean = true;
+  communicatedCard: Card = null;
   status: PlayerStatus = PlayerStatus.ActionPending;
   constructor(socketID: string, name: string) {
     this.socketID = socketID;

@@ -16,17 +16,17 @@ export const getOtherPlayers = (game: Game, playerID: string): Player[] => {
 };
 
 export const getCardsToCommunicate = (hand: Card[]): Card[] => {
-  let cardsToComm: Card[] = [];
+  const cardsToComm: Card[] = [];
   const suitInts = Object.values(Suit).filter((val) => !isNaN(val as any));
   console.log(suitInts);
   suitInts
     .filter((suit) => suit !== Suit.Rocket)
     .forEach((suit) => {
-      //For each colored suit, get unique card or highest and lowest
+      // For each colored suit, get unique card or highest and lowest
       const suitedCards = hand
-        .map((c) => ({ ...c })) //Clone hand array to avoid modifying actual hand
-        .filter((card) => card.suit === suit) //Process 1 suit at a time
-        .sort((cardA, cardB) => cardA.value - cardB.value); //Sort so indexed values are reliable
+        .map((c) => ({ ...c })) // Clone hand array to avoid modifying actual hand
+        .filter((card) => card.suit === suit) // Process 1 suit at a time
+        .sort((cardA, cardB) => cardA.value - cardB.value); // Sort so indexed values are reliable
 
       if (suitedCards.length === 1) {
         suitedCards[0].commStatus = CommStatus.Only;
@@ -42,5 +42,8 @@ export const getCardsToCommunicate = (hand: Card[]): Card[] => {
 };
 
 export const cardsEqual = (cardA: Card, cardB: Card) => {
-  return cardA.value === cardB.value && cardA.suit === cardB.suit;
+  if (cardA != null && cardB != null) {
+    return cardA.value === cardB.value && cardA.suit === cardB.suit;
+  }
+  return false;
 };
