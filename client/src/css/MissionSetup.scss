@@ -1,0 +1,32 @@
+.mission-setup-container {
+  width: 425px;
+  margin: auto;
+  .header {
+    margin-bottom: 30px;
+  }
+  .task-count,
+  .task-order,
+  .task-relative-order,
+  .task-omega {
+    width: 100%;
+    border: 1px solid white;
+    display: flex;
+  }
+  .task-count {
+    height: 40px;
+    justify-content: space-between;
+    background-color: white;
+    h4 {
+      width: 120px;
+    }
+    input {
+      flex: 1;
+    }
+  }
+  h1,
+  h4 {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+  }
+}

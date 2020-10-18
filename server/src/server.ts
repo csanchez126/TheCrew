@@ -1,8 +1,7 @@
 import express from "express";
 import http from "http";
-import socketIO, { Socket } from "socket.io";
+import socketIO from "socket.io";
 import { PlayerStatus } from "./enums";
-import { GameManager } from "./managers/GameManager";
 import { Game } from "./models/Game";
 import { Player } from "./models/Player";
 import { Turn } from "./models/Turn";

@@ -2,6 +2,7 @@ import { PlayerStatus } from "../enums";
 import { Card, Task } from ".";
 
 export class Player {
+  isGameHost: boolean = false;
   socketID: string = "";
   name: string = "";
   tasks: Task[] = [];

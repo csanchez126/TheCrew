@@ -1,6 +1,13 @@
 import { cardsEqual } from "../utils/GameUtils";
-import { CommStatus, GameState, PlayerStatus, Suit } from "../enums";
+import {
+  CommStatus,
+  GameState,
+  PlayerStatus,
+  Suit,
+  TaskPriority,
+} from "../enums";
 import { Card, Player, Task, Trick, Turn } from "./";
+
 export class Game {
   gameID: string;
   players: Player[];
@@ -174,15 +181,14 @@ export class Game {
       // First move
       if (this.trick.turns.length === 1) {
         this.trick.suit = card.suit;
-        this.currentTrickWinner = currentPlayer;
       }
       // Last move
       else if (this.trick.turns.length === this.players.length) {
         this.computeTrickWinner(turn);
-        this.computeTrickEnd(turn);
       } else {
         this.computeTrickWinner(turn);
       }
+      this.computeTrickEnd(turn);
     }
   };
 
@@ -205,36 +211,31 @@ export class Game {
   public computeTrickEnd = (turn: Turn) => {
     const trickWinner = this.currentTrickWinner;
     console.log("trickWinner", trickWinner.name);
-    const { card } = turn;
     let trickValid = true;
 
-    // Check if trick winner has task
-    //   Check task requirement
-    //      If valid, trick won, game continues
-    this.trick.turns.forEach((trickTurn) => {
-      const matchingTask: Task = trickWinner.tasks.find((c) =>
-        cardsEqual(trickTurn.card, c)
-      );
-      if (matchingTask !== undefined) {
-        // Should check task req here?
-        trickValid = true;
-        console.log("winner has accomplished mission");
-        this.removeTask(trickWinner, matchingTask);
+    // Check if trick winner accomplished on of his tasks
+    const accomplishedTask = this.getAccomplishedTask(trickWinner);
+    if (accomplishedTask !== undefined) {
+      console.log("winner has accomplished mission");
+      if (this.defaultTrickValidation(accomplishedTask)) {
+        this.removeTask(trickWinner, accomplishedTask);
+      } else {
+        trickValid = false;
       }
-    });
-
-    // Else check if someone else has it
-    //      if someone else has it, game ends
-    // Else game continues
-    this.players
-      .filter((p) => p.name !== turn.playerID)
-      .forEach((player) => {
-        this.trick.turns.forEach((gameTrick) => {
-          if (player.tasks.some((c) => cardsEqual(c, gameTrick.card))) {
-            trickValid = false;
-          }
+    } else {
+      // Else check if someone else has it
+      //      if someone else has it, game ends
+      // Else game continues
+      this.players
+        .filter((p) => p.name !== turn.playerID)
+        .forEach((player) => {
+          this.trick.turns.forEach((gameTrick) => {
+            if (player.tasks.some((c) => cardsEqual(c, gameTrick.card))) {
+              trickValid = false;
+            }
+          });
         });
-      });
+    }
 
     if (trickValid && this.players.every((p) => p.tasks.length === 0)) {
       this.state = GameState.MissionVictory;
@@ -242,6 +243,52 @@ export class Game {
       this.state = GameState.TrickSetup;
     } else {
       this.state = GameState.MissionFailed;
+    }
+  };
+
+  public getAccomplishedTask = (player: Player) => {
+    let accomplishedTask: Task = null;
+    this.trick.turns.forEach((trickTurn) => {
+      accomplishedTask = player.tasks.find((c) =>
+        cardsEqual(trickTurn.card, c)
+      );
+    });
+    return accomplishedTask;
+  };
+
+  public defaultTrickValidation = (task: Task) => {
+    switch (task.priority) {
+      case TaskPriority.Omega:
+        return this.tasks.length === 1 && cardsEqual(this.tasks[0], task);
+      case TaskPriority.First:
+        return this.tasks.length === this.taskCount;
+      case TaskPriority.Second:
+        return this.tasks.length === this.taskCount - 1;
+      case TaskPriority.Third:
+        return this.tasks.length === this.taskCount - 2;
+      case TaskPriority.Fourth:
+        return this.tasks.length === this.taskCount - 3;
+      case TaskPriority.Fifth:
+        return this.tasks.length === this.taskCount - 4;
+      case TaskPriority.OneRelative:
+        return this.tasks.some((t) => t.priority === TaskPriority.TwoRelative);
+      case TaskPriority.TwoRelative:
+        return this.tasks.every((t) => t.priority !== TaskPriority.OneRelative);
+      case TaskPriority.ThreeRelative:
+        return this.tasks.every(
+          (t) =>
+            t.priority !== TaskPriority.OneRelative &&
+            t.priority !== TaskPriority.TwoRelative
+        );
+      case TaskPriority.FourRelative:
+        return this.tasks.every(
+          (t) =>
+            t.priority !== TaskPriority.OneRelative &&
+            t.priority !== TaskPriority.TwoRelative &&
+            t.priority !== TaskPriority.ThreeRelative
+        );
+      default:
+        return true;
     }
   };
 

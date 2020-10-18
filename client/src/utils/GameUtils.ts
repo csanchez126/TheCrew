@@ -1,4 +1,4 @@
-import { CommStatus, Suit } from "../enums";
+import { CommStatus, Suit, TaskPriority } from "../enums";
 import { Card, Game, Player } from "../models";
 
 export const getCurrentPlayer = (game: Game): Player => {
@@ -43,4 +43,22 @@ export const getCardsToCommunicate = (hand: Card[]): Card[] => {
 
 export const cardsEqual = (cardA: Card, cardB: Card) => {
   return cardA.value === cardB.value && cardA.suit === cardB.suit;
+};
+
+export const getNumberTaskTokens = () => {
+  return [
+    TaskPriority.First,
+    TaskPriority.Second,
+    TaskPriority.Third,
+    TaskPriority.Fourth,
+    TaskPriority.Fifth,
+  ];
+};
+export const getRelativeTaskTokens = () => {
+  return [
+    TaskPriority.OneRelative,
+    TaskPriority.TwoRelative,
+    TaskPriority.ThreeRelative,
+    TaskPriority.FourRelative,
+  ];
 };

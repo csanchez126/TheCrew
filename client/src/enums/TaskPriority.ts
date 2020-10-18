@@ -1,5 +1,4 @@
 export enum TaskPriority {
-  Omega,
   First,
   Second,
   Third,
@@ -9,4 +8,5 @@ export enum TaskPriority {
   TwoRelative,
   ThreeRelative,
   FourRelative,
+  Omega,
 }

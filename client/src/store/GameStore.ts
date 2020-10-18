@@ -1,15 +1,18 @@
-import { Card, Game, Player, Turn } from "../models";
+import { Card, Game, Mission, Player, Turn } from "../models";
 import socketIOClient from "socket.io-client";
 import { PlayerStatus } from "../enums";
 import { action, makeAutoObservable, observable } from "mobx";
+import { MissionSetupStore } from "./MissionSetupStore";
 
 export class GameStore {
   private readonly ENDPOINT = "localhost:4001";
   game: Game = {} as Game;
   socket: SocketIOClient.Socket;
   player: Player;
+  @observable missionSetupStore: MissionSetupStore;
   constructor() {
     this.initGameStore();
+    this.missionSetupStore = new MissionSetupStore(this);
     makeAutoObservable(this);
   }
 
@@ -26,6 +29,10 @@ export class GameStore {
     this.socket.on("updateGameState", (game: Game) => {
       this.updateGameState(game);
     });
+  };
+
+  startMission = (mission: Mission) => {
+    this.socket.emit("stat mission", mission);
   };
 
   selectTask = (card: Card) => {
@@ -51,7 +58,7 @@ export class GameStore {
   updateGameState = (game: Game) => {
     this.game = game;
     this.player = this.game.players.find((p) => p.socketID === this.socket.id);
-    console.log(game)
+    console.log(game);
   };
 
   disconnect = () => {

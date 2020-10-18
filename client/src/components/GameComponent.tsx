@@ -9,6 +9,7 @@ import { observer } from "mobx-react-lite";
 import { TrickPlay } from "./TrickPlay";
 import "../css/GameComponent.scss";
 import { PlayerHand } from "./PlayerHand";
+import { MissionSetup } from "./MissionSetup";
 
 export const GameComponent = observer(() => {
   const gameStore = React.useContext(GameContext);
@@ -18,7 +19,8 @@ export const GameComponent = observer(() => {
       case GameState.MissionStart:
         return;
       case GameState.TaskSelection:
-        return <TaskSelection />;
+        return <MissionSetup />;
+      // return <TaskSelection />;
       case GameState.TrickSetup:
         return <Communication />;
       case GameState.TrickOngoing:

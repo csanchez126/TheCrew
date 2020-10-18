@@ -1,7 +1,7 @@
 import React from "react";
 import { CardType, CommStatus, Suit } from "../enums";
 import { Card } from "../models/Card";
-import commTokenGreen from "../img/commTokenGreen.png";
+import { commTokenGreen } from "../img";
 import "../css/CardComponent.scss";
 import { spawn } from "child_process";
 interface CardProps {
